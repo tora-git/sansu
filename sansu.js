@@ -18,7 +18,6 @@ function init(){
   });
   
   start();
-  syutudai();
 }
 
 function syutudai(){
