@@ -14,11 +14,24 @@
       <label id="enzan" class="enzan">＋</label>
       <label id="val2" class="valinput">0</label>
       <label class="enzan">＝</label>
-      <input type="number" id="kotae" value="">
+      <label id="kaitoVal" class="kaito-val">0</label>
+      
+      <div id="tenValBtnBox"></div>
+      <div id="oneValBtnBox"></div>
+      
+      <div id="editValBox">
+        <button id="clearBtn">クリア</button>
+        <button id="decideBtn">決定</button>
+      </div>
+      
       <input type="hidden" id="seikai"></input>
-      <button id="kaitouBtn">回答</button>
     </div>
+    
     <div id="progressBox">
+      <progress id="progressBar" max="100" value="70">70%</progress>
+      <label id="targetCnt" class="valinput">0</label>
+      <label>／</label>
+      <label id="maxCnt" class="valinput">0</label>
     </div>
     <button id="restartBtn">最初から</button>
   </body>

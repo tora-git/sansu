@@ -1,9 +1,22 @@
 .valinput{
-  background: lightyellow;
-  width: 50px;
+  display: inline-block;
+  /* background: lightyellow; */
+  width: 20px;
   text-align: right;
   /* border: 1px black solid; */
 }
+.kaito-val{
+  display: inline-block;
+  width: 30px;
+  background: lightyellow;
+  border: 1px black solid;
+  text-align: right;
+}
+.input-btn{
+  width: 30px;
+  height: 30px;
+}
+
 #kotae{
   width: 50px;
   text-align: right;

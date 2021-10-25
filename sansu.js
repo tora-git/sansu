@@ -3,15 +3,25 @@ const MINUS = 2;
 const MULTIPULL = 3;
 const DEVIDE = 4;
 
-let MONDAI_MAX = 100;
+let MONDAI_MAX = 50;
 
 let startTime = new Date();
-let calcPos = -1;
-let seikaiCnt = 0;
 
 function init(){
-  $("#kaitouBtn").click(function(){
-    kaito();
+  for (let i = 1; i <= 9; i++){
+    $("#tenValBtnBox").append("<button class='input-btn' value='" + (i * 10) + "'>" + (i * 10) + "</button>");
+    $("#oneValBtnBox").append("<button class='input-btn' value='" + i + "'>" + i + "</button>");
+  }
+  
+  $(".input-btn").click(function(){
+    let value = Number($(this).val());
+    inputValue(value);
+  });
+  $("#clearBtn").click(function(){
+    $("#kaitoVal").text("0");
+  });
+  $("#decideBtn").click(function(){
+    decide();
   });
   $("#restartBtn").click(function(){
     reStart();
@@ -21,7 +31,6 @@ function init(){
 }
 
 function syutudai(){
-  calcPos++;
   let enzanVal = getRansu(1, 4);
   let enzanTxt;
   let val1;
@@ -62,44 +71,53 @@ function syutudai(){
   $("#enzan").text(enzanTxt);
   $("#val2").text(val2);
   $("#seikai").text(kaito);
-  $("#kotae").val("");
+  $("#kaitoVal").text("0");
+  let targetCnt = Number($("#targetCnt").text());
+  targetCnt++;
+  $("#targetCnt").text(String(targetCnt));
+  $("#progressBar").attr("value", String(targetCnt));
 }
 
-function kaito(){
-  let kaitoVal = $("#kotae").val();
-  if (kaitoVal.length === 0){
-    alert("入力して");
+function inputValue(value){
+  let baseVal = Number($("#kaitoVal").text());
+  let newVal = baseVal + value;
+  $("#kaitoVal").text(newVal);
+  
+  if (value < 10){
+    decide();
+  }
+}
+
+
+function decide(){
+  let kaitoVal = Number($("#kaitoVal").text());
+  
+  
+  let seikai = Number($("#seikai").text());
+  if (kaitoVal !== seikai){
+    alert("ち");
+    alert("が");
+    alert("う！");
+    $("#kaitoVal").text("0");
     return;
   }
   
-  let seikai = $("#seikai").text();
-  let progressCells = $("#progressBox").children();
-  let progressCell = progressCells.eq(calcPos);
-  progressCell.removeClass("mada");
-  if (kaitoVal == seikai){
-    seikaiCnt++;
-    progressCell.addClass("seikai");
-    //alert("正解！！次！");
-    //syutudai();
-  } else {
-    progressCell.addClass("matigai");
-    //alert("はずれ・・・もう一回");
-  }
-  
-  if (calcPos + 1 === MONDAI_MAX){
+  let targetCnt = Number($("#targetCnt").text());
+  if (targetCnt === MONDAI_MAX){
     let endTime = new Date();
-    let passedSec = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
-    let seikaiRitu = Math.floor((seikaiCnt * 100) / MONDAI_MAX);
-    alert("お疲れ様です！\n正解率：" + seikaiRitu + "%\nかかった時間：" + passedSec + "秒");
+    let passedAllSec = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
+    let passedSec = passedAllSec % 60;
+    let passedMin = (passedAllSec - passedSec) / 60;
+    alert("お疲れ様です！\nかかった時間：" + passedMin + "分" + passedSec + "秒");
   } else {
     syutudai();
   }
 }
 
 function reStart(){
-  let inputMaxCnt = window.prompt("何問やる？", "100");
+  let inputMaxCnt = window.prompt("何問やる？", String(MONDAI_MAX));
   if (inputMaxCnt.length === 0){
-    inputMaxCnt = "100";
+    inputMaxCnt = "50";
   }
   
   MONDAI_MAX = Number(inputMaxCnt);
@@ -109,13 +127,11 @@ function reStart(){
   
 function start(){
   startTime = new Date();
-  calcPos = -1;
-  seikaiCnt = 0;
   
-  $("#progressBox").empty();
-  for (let i = 0; i < MONDAI_MAX; i++){
-    $("#progressBox").append("<label class='mada'>■</label>");
-  }
+  $("#targetCnt").text(String(0));
+  $("#maxCnt").text(String(MONDAI_MAX));
+  $("#progressBar").attr("max", String(MONDAI_MAX));
+  $("#progressBar").attr("value", String(0));
   
   syutudai();
 }
