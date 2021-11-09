@@ -27,6 +27,7 @@ function init(){
     reStart();
   });
   
+  showHighScore(MONDAI_MAX);
   start();
 }
 
@@ -106,9 +107,15 @@ function decide(){
   if (targetCnt === MONDAI_MAX){
     let endTime = new Date();
     let passedAllSec = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
-    let passedSec = passedAllSec % 60;
-    let passedMin = (passedAllSec - passedSec) / 60;
-    alert("お疲れ様です！\nかかった時間：" + passedMin + "分" + passedSec + "秒");
+    //ハイスコア保存
+    let isHighScore = saveHighScore(MONDAI_MAX, passedAllSec)
+    
+    if (isHighScore){
+      alert("やった！ハイスコア更新！！\nかかった時間：" + formatScore(passedAllSec));
+    } else {
+      alert("お疲れ様です。\nかかった時間：" + formatScore(passedAllSec));
+    }
+    
   } else {
     syutudai();
   }
@@ -121,6 +128,8 @@ function reStart(){
   }
   
   MONDAI_MAX = Number(inputMaxCnt);
+  
+  showHighScore(MONDAI_MAX);
   
   start();
 }
@@ -139,4 +148,36 @@ function start(){
 function getRansu(minVal, maxVal){
   let ran = Math.floor( Math.random() * (maxVal + 1 - minVal) ) + minVal;
   return ran;
+}
+
+function formatScore(passedAllSec){
+  let passedSec = passedAllSec % 60;
+  let passedMin = (passedAllSec - passedSec) / 60;
+  return passedMin + "分" + passedSec + "秒";
+}
+
+function saveHighScore(mondaiMax, passedAllSec){
+  let scoreKey = "sansuHigh" + mondaiMax;
+  let highScoreObj = localStorage.getItem(scoreKey);
+  let currentHighScore = Number(highScoreObj);
+  if (highScoreObj == null || currentHighScore > passedAllSec){
+    localStorage.setItem(scoreKey, String(passedAllSec));
+    showHighScore(mondaiMax);
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function showHighScore(mondaiMax){
+  let scoreKey = "sansuHigh" + mondaiMax;
+  let highScoreStr;
+  let highScoreObj = localStorage.getItem(scoreKey);
+  if (highScoreObj == null){
+    highScoreStr = "---";
+  } else {
+    let currentHighScore = Number(highScoreObj);
+    highScoreStr = formatScore(currentHighScore);
+  }
+  $("#highScore").text(highScoreStr);
 }
